@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+    <LinearLayout   android:id="@id/guider_linearlayout_top_id"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:gravity="right|center_vertical"
+                    android:background="#B0E0E6"
+                    >
+
+        <TextView   android:id="@id/guider_help_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20px"
+                    android:textStyle="bold"
+                    android:textColor="#A020F0"
+                    android:text="@string/guider_help_name"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+                    android:id="@id/guider_linearlayout_middle_id"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="3"
+                    android:background="#B0E0E6"
+            >
+        <Button
+                android:id="@id/guider_setting_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:text="@string/guider_openlockscreen_name"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+                    android:id="@id/guider_linearlayout_button_id"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|center_vertical"
+                    android:layout_weight="0.1"
+                    android:background="#FFFFCD"
+            >
+
+        <TextView
+                    android:id="@id/guider_setting_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20px"
+                    android:textSize="12dp"
+                    android:textColor="#808069"
+                    android:text="@string/guider_setting_name"/>
+
+    </LinearLayout>
+
+</LinearLayout>
