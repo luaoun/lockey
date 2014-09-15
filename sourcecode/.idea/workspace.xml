@@ -549,7 +549,7 @@
       <created>1410448683021</created>
       <updated>1410448683021</updated>
       <workItem from="1410491148201" duration="11854000" />
-      <workItem from="1410759135174" duration="13385000" />
+      <workItem from="1410759135174" duration="13398000" />
     </task>
     <task id="LOCAL-00001" summary="同步代码">
       <created>1410516817047</created>
@@ -563,11 +563,15 @@
       <created>1410775376896</created>
       <updated>1410775376896</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="同步代码">
+      <created>1410775425372</created>
+      <updated>1410775425372</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25239000" />
+    <option name="totallyTimeSpent" value="25252000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
