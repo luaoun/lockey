@@ -1,7 +1,6 @@
 package com.lockey.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,10 +8,15 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.lockey.R;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.*;
 
@@ -27,13 +31,27 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
 
     SharedPreferences preferences;
 
+    Set<String> choicedApps = new HashSet<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_layout);
 
         if(preferences == null)
-            preferences = getSharedPreferences("setting", Context.MODE_PRIVATE);
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String selectedAppsJsonStr = preferences.getString("selectedApps", "");
+        JSONTokener jsonParser = new JSONTokener(selectedAppsJsonStr);
+        try {
+            JSONObject jsonObject = (JSONObject)jsonParser.nextValue();
+            JSONArray array = jsonObject.getJSONArray("choicedAppNames");
+            for(int i=0;i<array.length();i++){
+                String appName = (String)array.get(i);
+                choicedApps.add(appName);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         gridView = (GridView) findViewById(R.id.gridView);
         String from[] = new String[]{"app_name"};
@@ -88,10 +106,6 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
                 String appLabel = (String) reInfo.loadLabel(getPackageManager()); // 获得应用程序的Label
                 Drawable icon = reInfo.loadIcon(getPackageManager()); // 获得应用程序图标
                 Map appInfo = new HashMap();
-//                appInfo.put("app_name",appLabel);
-//                appInfo.put("app_icon",icon);
-//                appInfo.put("pkg_name",pkgName);
-//                appInfo.put("act_name",activityName);
                 appInfo.put("app_name",reInfo);
                 installedApps.add(appInfo);
             }
@@ -102,17 +116,17 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i("main","viewName="+view.getClass().getName()+";viewId="+view.getId());
-        Log.i("main","parentView="+parent.getClass().getName());
-        Log.i("main","position="+position);
-        Log.i("main","id="+id);
-        Map itemObject = (Map)parent.getAdapter().getItem(position);
-        Log.i("main","item="+itemObject.getClass().getName());
-        Log.i("main","item_pkgName="+itemObject.get("pkg_name"));
-        Log.i("main","item_actName="+itemObject.get("act_name"));
-        TextView textView = (TextView)view.findViewById(R.id.app_name);
-        textView.setTextColor(android.graphics.Color.RED);
 
-        SharedPreferences.Editor editor = preferences.edit();
+
+    }
+
+    public static void main(String[] args) {
+
+        HashSet<String> hashSet = new HashSet<String>();
+        hashSet.add("android phone");
+        hashSet.add("apple iphone");
+        hashSet.add("windows mobile phone");
+        System.out.println("Hello world!");
+
     }
 }

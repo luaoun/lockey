@@ -21,15 +21,12 @@ public class LockeyLauncherGuider extends Activity {
         startButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
 
                 startActivity(intent);
-//                Toast.makeText(getApplicationContext(), "乐奇锁已经开启", Toast.LENGTH_LONG).show();
             }
         });
     }
-
-
 
 
 }
