@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,8 +36,8 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
             preferences = getSharedPreferences("setting", Context.MODE_PRIVATE);
 
         gridView = (GridView) findViewById(R.id.gridView);
-        String from[] = new String[]{"app_icon","app_name"};
-        int to[] = new int[]{R.id.app_icon,R.id.app_name};
+        String from[] = new String[]{"app_name"};
+        int to[] = new int[]{R.id.app_name};
         adapter = new SimpleAdapter(this,getDate(),R.layout.item,from,to);
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
@@ -44,6 +45,22 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
                 if(view instanceof ImageView && data instanceof Drawable){
                     ImageView iconView = (ImageView)view;
                     iconView.setImageDrawable((Drawable) data);
+                    return true;
+                }else if(view instanceof TextView ){
+                    TextView textView = (TextView)view;
+                    ResolveInfo resolveInfo = (ResolveInfo)data;
+                    Drawable icon = resolveInfo.loadIcon(getPackageManager());
+                    int width = icon.getIntrinsicWidth();
+                    int height = icon.getIntrinsicHeight();
+                    float density = getApplicationContext().getResources().getDisplayMetrics().density;
+                    int actWidth = (int)(width * density);
+                    int actHeight = (int)(height * density);
+                    Log.i("main","At "+density +"DIP ,icon size is :" +actWidth+" x "+actHeight);
+                    Rect rect = icon.getBounds();
+                    icon.setBounds(rect);
+                    textView.setCompoundDrawables(null,icon,null,null);
+//                    textView.setCompoundDrawablesWithIntrinsicBounds(null,icon,null,null);
+                    textView.setText(resolveInfo.loadLabel(getPackageManager()));
                     return true;
                 }
                 return false;
@@ -71,10 +88,11 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
                 String appLabel = (String) reInfo.loadLabel(getPackageManager()); // 获得应用程序的Label
                 Drawable icon = reInfo.loadIcon(getPackageManager()); // 获得应用程序图标
                 Map appInfo = new HashMap();
-                appInfo.put("app_name",appLabel);
-                appInfo.put("app_icon",icon);
-                appInfo.put("pkg_name",pkgName);
-                appInfo.put("act_name",activityName);
+//                appInfo.put("app_name",appLabel);
+//                appInfo.put("app_icon",icon);
+//                appInfo.put("pkg_name",pkgName);
+//                appInfo.put("act_name",activityName);
+                appInfo.put("app_name",reInfo);
                 installedApps.add(appInfo);
             }
         }
