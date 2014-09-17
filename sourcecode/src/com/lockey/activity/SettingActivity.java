@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Rect;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.google.gson.Gson;
 import com.lockey.R;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -25,13 +25,13 @@ import java.util.*;
  */
 public class SettingActivity extends Activity implements AdapterView.OnItemClickListener{
 
-    SimpleAdapter adapter;
+    GrideViewAdapter adapter;
 
     GridView gridView;
 
-    SharedPreferences preferences;
+    Button settingButton;
 
-    Set<String> choicedApps = new HashSet<String>();
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +40,25 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
 
         if(preferences == null)
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String selectedAppsJsonStr = preferences.getString("selectedApps", "");
-        JSONTokener jsonParser = new JSONTokener(selectedAppsJsonStr);
-        try {
-            JSONObject jsonObject = (JSONObject)jsonParser.nextValue();
-            JSONArray array = jsonObject.getJSONArray("choicedAppNames");
-            for(int i=0;i<array.length();i++){
-                String appName = (String)array.get(i);
-                choicedApps.add(appName);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        settingButton = (Button)findViewById(R.id.btn1);
 
         gridView = (GridView) findViewById(R.id.gridView);
+
         String from[] = new String[]{"app_name"};
         int to[] = new int[]{R.id.app_name};
-        adapter = new SimpleAdapter(this,getDate(),R.layout.item,from,to);
+
+        adapter = new GrideViewAdapter(preferences,this,getDate(),R.layout.item,from,to);
+
+        String selectedAppsJsonStr = preferences.getString("selectedApps", "");
+        Log.i("main",selectedAppsJsonStr);
+        Gson gson = new Gson();
+
+        HashSet selectedApps = gson.fromJson(selectedAppsJsonStr, HashSet.class);
+
+        adapter.setChoicedApps(selectedApps);
+
+        //渲染每个Item时的处理
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, final String textRepresentation) {
@@ -74,16 +76,14 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
                     int actWidth = (int)(width * density);
                     int actHeight = (int)(height * density);
                     Log.i("main","At "+density +"DIP ,icon size is :" +actWidth+" x "+actHeight);
-                    Rect rect = icon.getBounds();
-                    icon.setBounds(rect);
-                    textView.setCompoundDrawables(null,icon,null,null);
-//                    textView.setCompoundDrawablesWithIntrinsicBounds(null,icon,null,null);
+                    textView.setCompoundDrawablesWithIntrinsicBounds(null,icon,null,null);
                     textView.setText(resolveInfo.loadLabel(getPackageManager()));
                     return true;
                 }
                 return false;
             }
         });
+        gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(this);
     }
@@ -117,16 +117,31 @@ public class SettingActivity extends Activity implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        adapter.notifyDataSetChanged();
 
+        adapter.reflashSettingButtonText(settingButton);
+
+        adapter.save();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JSONException {
 
-        HashSet<String> hashSet = new HashSet<String>();
-        hashSet.add("android phone");
-        hashSet.add("apple iphone");
-        hashSet.add("windows mobile phone");
-        System.out.println("Hello world!");
+        String arrays[] = new String[]{"a","b","c"};
+        HashSet<String> set = new HashSet<String>();
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        Gson gson = new Gson();
+        String setJson = gson.toJson(set);
+        HashSet obj = gson.fromJson(setJson, HashSet.class);
+        Iterator iterator = obj.iterator();
+        while(iterator.hasNext()){
+            String next = (String)iterator.next();
+            System.out.println(next);
+        }
 
+        obj.addAll(set);
+
+        System.out.printf(""+obj.size());
     }
 }

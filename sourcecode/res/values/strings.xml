@@ -5,6 +5,6 @@
     <string name="guider_help_name">帮助</string>
     <string name="guider_setting_name">设置</string>
     <string name="act_name_setting">设置</string>
-    <string name="setting_btn1">已选择n个App</string>
+    <string name="setting_btn1">已选择{0}个App</string>
     <string name="setting_btn2">设置开锁方式</string>
 </resources>
